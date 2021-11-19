@@ -1,11 +1,11 @@
 @mixin setWaterFall($count: 1, $gap: 20px) {
-    -webkit-column-count: $count;
-    -webkit-column-gap: $gap;
-    -webkit-column-fill: auto;
-    -moz-column-count: $count;
-    -moz-column-gap: $gap;
-    -moz-column-fill: auto;
-    column-count: $count;
-    column-gap: $gap;
-    column-fill: auto;
-  }
+  -webkit-column-count: $count;
+  -webkit-column-gap: $gap;
+  -webkit-column-fill: auto;
+  -moz-column-count: $count;
+  -moz-column-gap: $gap;
+  -moz-column-fill: auto;
+  column-count: $count;
+  column-gap: $gap;
+  column-fill: auto;
+}

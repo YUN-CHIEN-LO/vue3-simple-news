@@ -1,14 +1,10 @@
 @import "./mixins";
 @import "./classname";
+@import "./grid";
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 * {
   // border: solid 1px #666;
   // box-sizing: border-box;
   font-family: "Noto Sans", sans-serif;
   color: #333;
-}
-body,
-html {
-  margin: 0;
-  padding: 0;
 }

@@ -63,13 +63,24 @@ export default defineComponent({
   -webkit-column-break-inside: avoid;
   -moz-column-break-inside: avoid;
   border: solid 1px #fff;
-  border-bottom: solid 3px #333;
+  border-bottom: solid 2px #333;
+  counter-increment: news;
+  animation: fadeIn 0.3s ease-in;
   &__wrapper {
     margin: 20px 0px;
     padding: 10px;
   }
   & img {
     width: 100%;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
   }
 }
 </style>
