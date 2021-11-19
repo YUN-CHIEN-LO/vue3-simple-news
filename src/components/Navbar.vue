@@ -61,11 +61,6 @@ export default defineComponent({
   methods: {
     handleClickTab(category: string) {
       this.$emit("change:tab", category);
-      window.scroll({
-        top: 0,
-        left: 0,
-        behavior: "smooth",
-      });
     },
     handleSearch() {
       const _ = this;
