@@ -17,11 +17,11 @@ export const REST = axios.create({
 // 請求攔截器
 REST.interceptors.request.use(
   // 請求之前
-  (config) => {
+  (config: any) => {
     return config;
   },
   // 請求錯誤
-  (error) => {
+  (error: any) => {
     return Promise.reject(error);
   }
 );
@@ -29,11 +29,11 @@ REST.interceptors.request.use(
 // 回應攔截器
 REST.interceptors.response.use(
   // 回應正常
-  (response) => {
+  (response: any) => {
     return response;
   },
   // 回應錯誤
-  (error) => {
+  (error: any) => {
     // 取得 回覆資源
     const { response } = error;
     // 取得 錯誤狀態碼
