@@ -10,6 +10,7 @@
     }
     &__tab {
       min-width: 130px;
+      text-align: right;
     }
     & .is-active {
       order: -1;
@@ -17,6 +18,15 @@
   }
   .newspaper {
     margin: 30px 0px;
+    &__wrapper {
+      @include setWaterFall($count: 1);
+    }
+  }
+  .show-sm-hide-lg {
+    display: block;
+  }
+  .hide-sm-show-lg {
+    display: none;
   }
 }
 
@@ -32,6 +42,7 @@
     }
     &__tab {
       min-width: 130px;
+      text-align: right;
     }
     & .is-active {
       order: -1;
@@ -39,6 +50,15 @@
   }
   .newspaper {
     margin: 30px;
+    &__wrapper {
+      @include setWaterFall($count: 1);
+    }
+  }
+  .show-sm-hide-lg {
+    display: block;
+  }
+  .hide-sm-show-lg {
+    display: none;
   }
 }
 @media only screen and (min-width: 768px) {
@@ -56,7 +76,15 @@
   }
   .newspaper {
     margin: 30px 80px;
-    @include setWaterFall(2);
+    &__wrapper {
+      @include setWaterFall($count: 2);
+    }
+  }
+  .show-sm-hide-lg {
+    display: none;
+  }
+  .hide-sm-show-lg {
+    display: block;
   }
 }
 @media only screen and (min-width: 1200px) {
@@ -74,6 +102,14 @@
   }
   .newspaper {
     margin: 30px 100px;
-    @include setWaterFall(3);
+    &__wrapper {
+      @include setWaterFall($count: 3);
+    }
+  }
+  .show-sm-hide-lg {
+    display: none;
+  }
+  .hide-sm-show-lg {
+    display: block;
   }
 }
