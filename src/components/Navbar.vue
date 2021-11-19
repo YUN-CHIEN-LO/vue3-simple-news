@@ -19,12 +19,21 @@
         @input="handleSearch"
       />
     </div>
+    <span
+      v-show="favorite.length > 0"
+      class="mdi mdi-cards-heart cur-pointer"
+      @click="handleClickTab('favorite')"
+    ></span>
+    <span
+      v-show="favorite.length === 0"
+      class="mdi mdi-cards-heart-outline"
+    ></span>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watchEffect } from "vue";
-
+import { mapGetters } from "vuex";
 export default defineComponent({
   name: "Navbar",
   props: {
@@ -37,6 +46,7 @@ export default defineComponent({
       default: "",
     },
   },
+  computed: mapGetters(["favorite"]),
   setup(props) {
     const tabList = ref([
       "general",
@@ -102,6 +112,9 @@ export default defineComponent({
   }
   &__search {
     padding: 10px;
+  }
+  & .mdi {
+    font-size: 32px;
   }
 }
 .is-active {

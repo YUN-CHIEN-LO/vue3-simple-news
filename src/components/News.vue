@@ -2,7 +2,19 @@
   <div class="news">
     <div class="news__wrapper">
       <h3 class="cur-pointer" @click="viewNews">{{ title }}</h3>
-      <p>{{ publishedAt.slice(0, 10) }}</p>
+      <div class="flex flex-aic">
+        <p>{{ publishedAt.slice(0, 10) }}</p>
+        <span
+          v-show="favorite.findIndex((x) => x.title === title) === -1"
+          class="mdi mdi-cards-heart-outline flex-mla"
+          @click="toggleFavorite"
+        ></span>
+        <span
+          v-show="favorite.findIndex((x) => x.title === title) !== -1"
+          class="mdi mdi-cards-heart flex-mla"
+          @click="toggleFavorite"
+        ></span>
+      </div>
       <hr />
       <p>{{ description }}</p>
       <img
@@ -16,9 +28,21 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { NEWS } from "@/type/NEWS";
 import { defineComponent } from "vue";
+import { mapGetters } from "vuex";
+import { Store } from "vuex";
 
+declare module "@vue/runtime-core" {
+  interface State {
+    favorite: NEWS[];
+  }
+
+  interface ComponentCustomProperties {
+    $store: Store<State>;
+  }
+}
 export default defineComponent({
   name: "News",
   props: {
@@ -47,9 +71,27 @@ export default defineComponent({
       default: "",
     },
   },
+  computed: mapGetters(["favorite"]),
   methods: {
     viewNews() {
-      window.open(this.url, "_blank").focus();
+      window.open(this.url, "_blank")?.focus();
+    },
+    toggleFavorite() {
+      const exist =
+        this.favorite.findIndex((x: NEWS) => x.title === this.title) !== -1;
+      const target = {
+        title: this.title,
+        author: this.author,
+        description: this.description,
+        publishedAt: this.publishedAt,
+        url: this.url,
+        urlToImage: this.urlToImage,
+      } as NEWS;
+      if (exist) {
+        this.$store.dispatch("popFavorite", target);
+      } else {
+        this.$store.dispatch("pushFavorite", target);
+      }
     },
   },
 });

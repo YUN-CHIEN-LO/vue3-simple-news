@@ -2,6 +2,7 @@
   <div class="newspaper">
     <div
       v-if="renderNewsList[slideIdx]"
+      v-show="!showFavorite"
       class="newspaper__highlight hide-sm-show-lg"
     >
       <img :src="renderNewsList[slideIdx].urlToImage" alt="" srcset="" />
@@ -29,20 +30,19 @@
       />
     </div>
     <h1 class="tac" v-if="renderNewsList.length === 0">No Matching Results.</h1>
+    <h1 class="tac" v-if="favorite.length === 0 && showFavorite">
+      No Favorite News.
+    </h1>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect, watch } from "vue";
+import { defineComponent, ref, watchEffect } from "vue";
+import { mapGetters } from "vuex";
 import News from "@/components/News.vue";
 import api from "@/api/index";
 const { news } = api;
-type NEWS = {
-  title: string;
-  author: string;
-  description: string;
-  publishedAt: string;
-};
+import type { NEWS } from "@/type/NEWS";
 export default defineComponent({
   name: "NewsPaper",
   components: { News },
@@ -58,15 +58,16 @@ export default defineComponent({
   },
   setup(props) {
     const newsList = ref([]);
-    const renderNewsList = ref([]);
+    const renderNewsList = ref([] as NEWS[]);
     let slideIdx = ref(0 as number);
     const slidetimer = ref(0 as ReturnType<typeof setTimeout>);
+    let showFavorite = ref(false);
     const getNewsApi = () => {
       news
         .getHeadLines(props.category, "us")
         .then((res) => {
           const timer = setTimeout(() => {
-            newsList.value = res.data.articles;
+            newsList.value = res.data.articles.map((x: NEWS) => x);
             renderNewsList.value = [...newsList.value];
             slideIdx.value = 0;
             clearTimeout(timer);
@@ -77,33 +78,46 @@ export default defineComponent({
         });
     };
     watchEffect(() => {
-      getNewsApi();
+      if (props.category === "favorite") {
+        showFavorite.value = true;
+      } else {
+        showFavorite.value = false;
+        getNewsApi();
+      }
     });
 
-    watch(
-      () => props.keyword,
-      (newValue) => {
-        renderNewsList.value = [
-          ...newsList.value.filter((x) => {
-            const { title, author, description, publishedAt } = x as NEWS;
-            const target = `${title}${author}${description}${publishedAt.slice(
-              0,
-              10
-            )}`.replace(/\s/g, "");
-            return target
-              .toLowerCase()
-              .includes(newValue.toLowerCase().replace(/\s/g, ""));
-          }),
-        ];
-        slideIdx.value = 0;
-      }
-    );
     return {
+      newsList,
       renderNewsList,
       slideIdx,
       slidetimer,
+      showFavorite,
     };
   },
+  watch: {
+    showFavorite(newValue) {
+      const arr = newValue ? this.favorite : this.newsList;
+      this.renderNewsList = [...arr];
+      this.slideIdx = 0;
+    },
+    keyword(newValue) {
+      const arr = this.showFavorite ? this.favorite : this.newsList;
+      this.renderNewsList = [
+        ...arr.filter((x: NEWS) => {
+          const { title, author, description, publishedAt } = x as NEWS;
+          const target = `${title}${author}${description}${publishedAt.slice(
+            0,
+            10
+          )}`.replace(/\s/g, "");
+          return target
+            .toLowerCase()
+            .includes(newValue.toLowerCase().replace(/\s/g, ""));
+        }),
+      ];
+      this.slideIdx = 0;
+    },
+  },
+  computed: mapGetters(["favorite"]),
   mounted() {
     this.slidetimer = setInterval(() => {
       if (this.slideIdx + 1 < this.renderNewsList.length) this.slideIdx++;
