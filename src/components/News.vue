@@ -10,12 +10,12 @@
         <!-- 我的最愛 -->
         <span
           v-show="favorite.findIndex((x) => x.title === title) === -1"
-          class="mdi mdi-cards-heart-outline flex-mla"
+          class="mdi mdi-cards-heart-outline flex-mla cur-pointer"
           @click="toggleFavorite"
         ></span>
         <span
           v-show="favorite.findIndex((x) => x.title === title) !== -1"
-          class="mdi mdi-cards-heart flex-mla"
+          class="mdi mdi-cards-heart flex-mla cur-pointer"
           @click="toggleFavorite"
         ></span>
       </div>
