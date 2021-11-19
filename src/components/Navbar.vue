@@ -1,5 +1,6 @@
 <template>
   <div class="navbar">
+    <!-- 選單 -->
     <div class="navbar__tabs">
       <div
         v-for="tab in tabList"
@@ -11,6 +12,7 @@
         {{ tab.toUpperCase() }}
       </div>
     </div>
+    <!-- 搜尋 -->
     <div class="navbar__search">
       <input
         type="text"
@@ -19,6 +21,7 @@
         @input="handleSearch"
       />
     </div>
+    <!-- 我的最愛 -->
     <span
       v-show="favorite.length > 0"
       class="mdi mdi-cards-heart cur-pointer"
@@ -48,6 +51,7 @@ export default defineComponent({
   },
   computed: mapGetters(["favorite"]),
   setup(props) {
+    // 選單陣列
     const tabList = ref([
       "general",
       "business",
@@ -57,8 +61,12 @@ export default defineComponent({
       "sports",
       "technology",
     ]);
+    // 關鍵字
     let searchKeyWord = ref("");
+    // 關鍵字debounce timer
     const searchDebounceTimer = ref(0 as ReturnType<typeof setTimeout>);
+
+    // 監聽搜尋
     watchEffect(() => {
       searchKeyWord.value = props.keyword;
     });
@@ -69,11 +77,21 @@ export default defineComponent({
     };
   },
   methods: {
+    /**
+     * 處理點擊分類事件
+     *
+     * @param {string} category - 分類
+     */
     handleClickTab(category: string) {
       this.$emit("change:tab", category);
     },
+
+    /**
+     * 處理搜尋事件
+     */
     handleSearch() {
       const _ = this;
+      // 簡單debounce
       if (this.searchDebounceTimer) {
         clearTimeout(this.searchDebounceTimer);
       }

@@ -25,7 +25,9 @@ export default defineComponent({
     BackTop,
   },
   setup() {
+    // 分類
     const category = ref("general");
+    // 關鍵字
     const keyword = ref("");
     return {
       category,
@@ -33,6 +35,9 @@ export default defineComponent({
     };
   },
   methods: {
+    /**
+     * 捲動至頁頂
+     */
     scrollTop() {
       window.scroll({
         top: 0,
@@ -40,11 +45,23 @@ export default defineComponent({
         behavior: "smooth",
       });
     },
+
+    /**
+     * 處理點擊分頁事件
+     *
+     * @param {string} category - 分類
+     */
     handleClickTab(category: string) {
       this.category = category;
       this.keyword = "";
       this.scrollTop();
     },
+
+    /**
+     * 處理搜尋事件
+     *
+     * @param {string} keyword - 關鍵字
+     */
     handleSearch(keyword: string) {
       this.keyword = keyword;
       this.scrollTop();

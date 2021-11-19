@@ -4,8 +4,6 @@ import axios from "axios";
 export const REST = axios.create({
   // 服務終端
   baseURL: "https://saurav.tech/NewsAPI/",
-  // 跨域請求挾帶 cookies
-  // withCredentials: true,
   // 請求回應超時
   timeout: 30000,
   // 自訂標頭

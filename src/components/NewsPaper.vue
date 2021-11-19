@@ -1,11 +1,14 @@
 <template>
   <div class="newspaper">
+    <!-- 頭條 -->
     <div
       v-if="renderNewsList[slideIdx]"
       v-show="!showFavorite"
       class="newspaper__highlight hide-sm-show-lg"
     >
+      <!-- 圖片 -->
       <img :src="renderNewsList[slideIdx].urlToImage" alt="" srcset="" />
+      <!-- 文字 -->
       <div
         class="newspaper__highlight__text"
         @click="window.open(renderNewsList[0].url, '_blank').focus()"
@@ -17,6 +20,8 @@
         <h1>{{ renderNewsList[slideIdx].title }}</h1>
       </div>
     </div>
+
+    <!-- 新聞列 -->
     <div class="newspaper__wrapper">
       <news
         v-for="news in renderNewsList"
@@ -29,6 +34,7 @@
         :urlToImage="news.urlToImage"
       />
     </div>
+    <!-- 提示文字 -->
     <h1 class="tac" v-if="renderNewsList.length === 0">No Matching Results.</h1>
     <h1 class="tac" v-if="favorite.length === 0 && showFavorite">
       No Favorite News.
@@ -40,28 +46,37 @@
 import { defineComponent, ref, watchEffect } from "vue";
 import { mapGetters } from "vuex";
 import News from "@/components/News.vue";
+import type { NEWS } from "@/type/NEWS";
 import api from "@/api/index";
 const { news } = api;
-import type { NEWS } from "@/type/NEWS";
 export default defineComponent({
   name: "NewsPaper",
-  components: { News },
   props: {
+    // 分類
     category: {
       type: String,
       default: "general",
     },
+    // 關鍵字
     keyword: {
       type: String,
       default: "",
     },
   },
+  components: { News },
   setup(props) {
-    const newsList = ref([]);
+    // 所有新聞陣列
+    const newsList = ref([] as NEWS[]);
+    // 渲染的新聞陣列
     const renderNewsList = ref([] as NEWS[]);
+    // 頭條新聞idx
     let slideIdx = ref(0 as number);
+    // 頭寮新聞timer
     const slidetimer = ref(0 as ReturnType<typeof setTimeout>);
+    // 是否顯示我的最愛
     let showFavorite = ref(false);
+
+    // 取得新聞API
     const getNewsApi = () => {
       news
         .getHeadLines(props.category, "us")
@@ -77,6 +92,8 @@ export default defineComponent({
           console.log(err);
         });
     };
+
+    // 監聽切換分類事件
     watchEffect(() => {
       if (props.category === "favorite") {
         showFavorite.value = true;
@@ -94,12 +111,15 @@ export default defineComponent({
       showFavorite,
     };
   },
+  computed: mapGetters(["favorite"]),
   watch: {
+    // 監聽顯示我的最愛
     showFavorite(newValue) {
       const arr = newValue ? this.favorite : this.newsList;
       this.renderNewsList = [...arr];
       this.slideIdx = 0;
     },
+    // 監聽搜尋關鍵字
     keyword(newValue) {
       const arr = this.showFavorite ? this.favorite : this.newsList;
       this.renderNewsList = [
@@ -117,8 +137,8 @@ export default defineComponent({
       this.slideIdx = 0;
     },
   },
-  computed: mapGetters(["favorite"]),
   mounted() {
+    // 播放頭條新聞
     this.slidetimer = setInterval(() => {
       if (this.slideIdx + 1 < this.renderNewsList.length) this.slideIdx++;
       else {
