@@ -11,11 +11,19 @@
         {{ tab.toUpperCase() }}
       </div>
     </div>
+    <div class="navbar__search">
+      <input
+        type="text"
+        v-model="searchKeyWord"
+        placeholder="search"
+        @input="handleSearch"
+      />
+    </div>
   </div>
 </template>
 
-<script>
-import { defineComponent, ref } from "vue";
+<script lang="ts">
+import { defineComponent, ref, watchEffect } from "vue";
 
 export default defineComponent({
   name: "Navbar",
@@ -24,8 +32,12 @@ export default defineComponent({
       type: String,
       default: "general",
     },
+    keyword: {
+      type: String,
+      default: "",
+    },
   },
-  setup() {
+  setup(props) {
     const tabList = ref([
       "general",
       "business",
@@ -35,19 +47,34 @@ export default defineComponent({
       "sports",
       "technology",
     ]);
+    let searchKeyWord = ref("");
+    const searchDebounceTimer = ref(0 as ReturnType<typeof setTimeout>);
+    watchEffect(() => {
+      searchKeyWord.value = props.keyword;
+    });
     return {
       tabList,
+      searchKeyWord,
+      searchDebounceTimer,
     };
   },
   methods: {
-    handleClickTab(category) {
-      console.log(category);
+    handleClickTab(category: string) {
       this.$emit("change:tab", category);
       window.scroll({
         top: 0,
         left: 0,
         behavior: "smooth",
       });
+    },
+    handleSearch() {
+      const _ = this;
+      if (this.searchDebounceTimer) {
+        clearTimeout(this.searchDebounceTimer);
+      }
+      this.searchDebounceTimer = setTimeout(() => {
+        _.$emit("change:input", this.searchKeyWord);
+      }, 300);
     },
   },
 });
@@ -60,9 +87,11 @@ export default defineComponent({
   background-color: #fff;
   z-index: 1000;
   height: 45px;
-  width: 100vw;
+  width: 100%;
   display: flex;
   transition-duration: 0.3s;
+  padding-top: 10px;
+  min-width: 410px;
   &__tabs {
     display: flex;
     flex-wrap: wrap;
@@ -75,6 +104,9 @@ export default defineComponent({
     &:hover {
       background-color: #ddd;
     }
+  }
+  &__search {
+    padding: 10px;
   }
 }
 .is-active {

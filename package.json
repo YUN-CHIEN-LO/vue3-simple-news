@@ -45,7 +45,17 @@
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "@typescript-eslint/no-this-alias": [
+        "error",
+        {
+          "allowDestructuring": true,
+          "allowedNames": [
+            "_"
+          ]
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",

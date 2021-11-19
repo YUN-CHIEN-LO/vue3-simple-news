@@ -1,7 +1,12 @@
 <template>
-  <div>
-    <Navbar :category="category" @change:tab="handleClickTab" />
-    <NewsPaper :category="category" />
+  <div class="app">
+    <Navbar
+      :category="category"
+      :keyword="keyword"
+      @change:tab="handleClickTab"
+      @change:input="handleSearch"
+    />
+    <NewsPaper :category="category" :keyword="keyword" />
   </div>
 </template>
 
@@ -18,13 +23,20 @@ export default defineComponent({
   },
   setup() {
     const category = ref("general");
+    const keyword = ref("");
     return {
       category,
+      keyword,
     };
   },
   methods: {
     handleClickTab(category: string) {
       this.category = category;
+      this.keyword = "";
+    },
+    handleSearch(keyword: string) {
+      console.log(keyword);
+      this.keyword = keyword;
     },
   },
 });
