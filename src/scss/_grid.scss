@@ -1,0 +1,115 @@
+@media only screen and (max-width: 500px) {
+  .navbar {
+    &__tabs {
+      width: 170px;
+      height: 45px;
+      overflow: hidden;
+      &:hover {
+        overflow: visible;
+      }
+    }
+    &__tab {
+      min-width: 130px;
+      text-align: right;
+    }
+    & .is-active {
+      order: -1;
+    }
+  }
+  .newspaper {
+    margin: 30px 0px;
+    &__wrapper {
+      @include setWaterFall($count: 1);
+    }
+  }
+  .show-sm-hide-lg {
+    display: block;
+  }
+  .hide-sm-show-lg {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 500px) {
+  .navbar {
+    &__tabs {
+      width: 170px;
+      height: 45px;
+      overflow: hidden;
+      &:hover {
+        overflow: visible;
+      }
+    }
+    &__tab {
+      min-width: 130px;
+      text-align: right;
+    }
+    & .is-active {
+      order: -1;
+    }
+  }
+  .newspaper {
+    margin: 30px;
+    &__wrapper {
+      @include setWaterFall($count: 1);
+    }
+  }
+  .show-sm-hide-lg {
+    display: block;
+  }
+  .hide-sm-show-lg {
+    display: none;
+  }
+}
+@media only screen and (min-width: 768px) {
+  .navbar {
+    &__tabs {
+      margin-left: 10px;
+      width: 100%;
+    }
+    &__tab {
+      min-width: inherit;
+    }
+    & .is-active {
+      order: inherit;
+    }
+  }
+  .newspaper {
+    margin: 30px 80px;
+    &__wrapper {
+      @include setWaterFall($count: 2);
+    }
+  }
+  .show-sm-hide-lg {
+    display: none;
+  }
+  .hide-sm-show-lg {
+    display: block;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .navbar {
+    &__tabs {
+      margin-left: 10px;
+      width: 100%;
+    }
+    &__tab {
+      min-width: inherit;
+    }
+    & .is-active {
+      order: inherit;
+    }
+  }
+  .newspaper {
+    margin: 30px 100px;
+    &__wrapper {
+      @include setWaterFall($count: 3);
+    }
+  }
+  .show-sm-hide-lg {
+    display: none;
+  }
+  .hide-sm-show-lg {
+    display: block;
+  }
+}

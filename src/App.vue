@@ -1,27 +1,79 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <div class="app">
+    <Navbar
+      :category="category"
+      :keyword="keyword"
+      @change:tab="handleClickTab"
+      @change:input="handleSearch"
+    />
+    <NewsPaper :category="category" :keyword="keyword" />
+    <BackTop @backtop="scrollTop" />
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import { defineComponent, ref } from "vue";
+import NewsPaper from "./components/NewsPaper.vue";
+import Navbar from "./components/Navbar.vue";
+import BackTop from "./components/BackTop.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    HelloWorld,
+    NewsPaper,
+    Navbar,
+    BackTop,
+  },
+  setup() {
+    // 分類
+    const category = ref("general");
+    // 關鍵字
+    const keyword = ref("");
+    return {
+      category,
+      keyword,
+    };
+  },
+  methods: {
+    /**
+     * 捲動至頁頂
+     */
+    scrollTop() {
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    },
+
+    /**
+     * 處理點擊分頁事件
+     *
+     * @param {string} category - 分類
+     */
+    handleClickTab(category: string) {
+      this.category = category;
+      this.keyword = "";
+      this.scrollTop();
+    },
+
+    /**
+     * 處理搜尋事件
+     *
+     * @param {string} keyword - 關鍵字
+     */
+    handleSearch(keyword: string) {
+      this.keyword = keyword;
+      this.scrollTop();
+    },
   },
 });
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body,
+html {
+  margin: 0;
+  padding: 0;
 }
 </style>
