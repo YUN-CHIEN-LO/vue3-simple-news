@@ -29,10 +29,18 @@ export default defineComponent({
     const category = ref("general");
     // 關鍵字
     const keyword = ref("");
+
     return {
       category,
       keyword,
     };
+  },
+  mounted() {
+    this.$store.dispatch("setIsMobile", () =>
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      )
+    );
   },
   methods: {
     /**

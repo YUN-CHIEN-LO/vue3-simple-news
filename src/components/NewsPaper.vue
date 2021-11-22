@@ -1,8 +1,11 @@
 <template>
   <div class="newspaper">
+    <div v-if="isLoading" class="newspaper__loading">
+      <span class="mdi mdi-reload"></span>
+    </div>
     <!-- 頭條 -->
     <div
-      v-if="renderNewsList[slideIdx]"
+      v-if="!isLoading && renderNewsList[slideIdx]"
       v-show="!showFavorite"
       class="newspaper__highlight hide-sm-show-lg"
     >
@@ -22,7 +25,7 @@
     </div>
 
     <!-- 新聞列 -->
-    <div class="newspaper__wrapper">
+    <div v-if="!isLoading" class="newspaper__wrapper">
       <news
         v-for="news in renderNewsList"
         :key="news.publishedAt"
@@ -35,8 +38,10 @@
       />
     </div>
     <!-- 提示文字 -->
-    <h1 class="tac" v-if="renderNewsList.length === 0">No Matching Results.</h1>
-    <h1 class="tac" v-if="favorite.length === 0 && showFavorite">
+    <h1 class="tac" v-if="!isLoading && renderNewsList.length === 0">
+      No Matching Results.
+    </h1>
+    <h1 class="tac" v-if="!isLoading && favorite.length === 0 && showFavorite">
       No Favorite News.
     </h1>
   </div>
@@ -75,18 +80,28 @@ export default defineComponent({
     const slidetimer = ref(0 as ReturnType<typeof setTimeout>);
     // 是否顯示我的最愛
     let showFavorite = ref(false);
+    // loading狀態
+    let isLoading = ref(false);
+
+    // 更新新聞資料
+    const handleLoad = (data: NEWS[]) => {
+      newsList.value = data.map((x: NEWS) => x);
+      renderNewsList.value = [...newsList.value];
+      slideIdx.value = 0;
+      const timer = setTimeout(() => {
+        isLoading.value = false;
+        clearTimeout(timer);
+      }, 500);
+    };
 
     // 取得新聞API
     const getNewsApi = () => {
+      isLoading.value = true;
+
       news
         .getHeadLines(props.category, "us")
         .then((res) => {
-          const timer = setTimeout(() => {
-            newsList.value = res.data.articles.map((x: NEWS) => x);
-            renderNewsList.value = [...newsList.value];
-            slideIdx.value = 0;
-            clearTimeout(timer);
-          }, 200) as ReturnType<typeof setTimeout>;
+          handleLoad(res.data.articles);
         })
         .catch((err) => {
           console.log(err);
@@ -109,6 +124,7 @@ export default defineComponent({
       slideIdx,
       slidetimer,
       showFavorite,
+      isLoading,
     };
   },
   computed: mapGetters(["favorite"]),
@@ -176,6 +192,27 @@ export default defineComponent({
       }
       transition-duration: 0.3s;
     }
+  }
+  &__loading {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    & span {
+      font-size: 48px;
+      &:before {
+        animation: loading 1s linear infinite;
+      }
+    }
+  }
+}
+@keyframes loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 </style>
