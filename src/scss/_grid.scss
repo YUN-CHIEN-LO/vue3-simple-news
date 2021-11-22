@@ -4,9 +4,6 @@
       width: 170px;
       height: 45px;
       overflow: hidden;
-      &:hover {
-        overflow: visible;
-      }
     }
     &__tab {
       min-width: 130px;
@@ -36,9 +33,6 @@
       width: 170px;
       height: 45px;
       overflow: hidden;
-      &:hover {
-        overflow: visible;
-      }
     }
     &__tab {
       min-width: 130px;
@@ -111,5 +105,11 @@
   }
   .hide-sm-show-lg {
     display: block;
+  }
+}
+
+@media (hover: hover) {
+  .navbar__tabs:hover {
+    overflow: visible;
   }
 }

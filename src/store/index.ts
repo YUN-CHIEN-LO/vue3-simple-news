@@ -3,6 +3,7 @@ import type { NEWS } from "@/type/NEWS";
 export default createStore({
   state: {
     favorite: [] as NEWS[],
+    isMobile: false as boolean,
   },
   mutations: {
     /**
@@ -24,6 +25,15 @@ export default createStore({
       const idx = state.favorite.findIndex((x) => x.title === target.title);
       state.favorite.splice(idx, 1);
     },
+    /**
+     * 設置是否為mobile
+     *
+     * @param {object} state - 狀態
+     * @param {boolean} val - 值
+     */
+    setIsMobile(state, val: boolean) {
+      state.isMobile = val;
+    },
   },
   actions: {
     pushFavorite(context, target: NEWS) {
@@ -32,8 +42,12 @@ export default createStore({
     popFavorite(context, target: NEWS) {
       context.commit("popFavorite", target);
     },
+    setIsMobile(context, val: boolean) {
+      context.commit("setIsMobile", val);
+    },
   },
   getters: {
     favorite: (state) => state.favorite,
+    isMobile: (state) => state.isMobile,
   },
 });

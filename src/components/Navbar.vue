@@ -1,13 +1,16 @@
 <template>
   <div class="navbar">
     <!-- 選單 -->
-    <div class="navbar__tabs">
+    <div
+      class="navbar__tabs"
+      :style="toggleMenu ? { overflow: 'visible' } : {}"
+    >
       <div
         v-for="tab in tabList"
         :key="tab"
         :class="{ 'is-active': tab === category }"
         class="navbar__tab"
-        @click="handleClickTab(tab)"
+        @click="handleClickTab($event, tab, tab === category)"
       >
         {{ tab.toUpperCase() }}
       </div>
@@ -25,7 +28,7 @@
     <span
       v-show="favorite.length > 0"
       class="mdi mdi-cards-heart cur-pointer"
-      @click="handleClickTab('favorite')"
+      @click="handleClickTab($event, 'favorite', false)"
     ></span>
     <span
       v-show="favorite.length === 0"
@@ -49,7 +52,7 @@ export default defineComponent({
       default: "",
     },
   },
-  computed: mapGetters(["favorite"]),
+  computed: mapGetters(["favorite", "isMobile"]),
   setup(props) {
     // 選單陣列
     const tabList = ref([
@@ -65,7 +68,8 @@ export default defineComponent({
     let searchKeyWord = ref("");
     // 關鍵字debounce timer
     const searchDebounceTimer = ref(0 as ReturnType<typeof setTimeout>);
-
+    // 收合選單
+    const toggleMenu = ref(false);
     // 監聽搜尋
     watchEffect(() => {
       searchKeyWord.value = props.keyword;
@@ -74,7 +78,15 @@ export default defineComponent({
       tabList,
       searchKeyWord,
       searchDebounceTimer,
+      toggleMenu,
     };
+  },
+  mounted() {
+    const _ = this;
+    // 監聽點擊選單以外的動作
+    document.body.addEventListener("click", () => {
+      _.toggleMenu = false;
+    });
   },
   methods: {
     /**
@@ -82,7 +94,9 @@ export default defineComponent({
      *
      * @param {string} category - 分類
      */
-    handleClickTab(category: string) {
+    handleClickTab(event: Event, category: string, isActive: boolean) {
+      event.stopPropagation();
+      this.toggleMenu = isActive ? true : false;
       this.$emit("change:tab", category);
     },
 
@@ -124,12 +138,17 @@ export default defineComponent({
     padding: 10px;
     cursor: pointer;
     background-color: #fff;
-    &:hover {
+    &:hover,
+    &:active {
       background-color: #ddd;
     }
   }
   &__search {
-    padding: 10px;
+    margin-left: auto;
+    padding: 5px;
+    & input {
+      height: 30px;
+    }
   }
   & .mdi {
     font-size: 32px;

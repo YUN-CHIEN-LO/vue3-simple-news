@@ -38,17 +38,6 @@
 import { NEWS } from "@/type/NEWS";
 import { defineComponent } from "vue";
 import { mapGetters } from "vuex";
-import { Store } from "vuex";
-
-declare module "@vue/runtime-core" {
-  interface State {
-    favorite: NEWS[];
-  }
-
-  interface ComponentCustomProperties {
-    $store: Store<State>;
-  }
-}
 export default defineComponent({
   name: "News",
   props: {
